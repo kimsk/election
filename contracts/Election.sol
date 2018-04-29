@@ -9,7 +9,7 @@ contract Election {
     }
 
     // Store Candidates
-
+    mapping(address => bool) public voters;
     // Fetch Candidate
     mapping(uint => Candidate) public candidates;
 
@@ -25,5 +25,24 @@ contract Election {
     function addCandidate (string _name) private {
         candidatesCount ++;
         candidates[candidatesCount] = Candidate(candidatesCount, _name, 0);
+    }
+
+    function getVoteCount (uint _candidateId) public constant returns (uint voteCount) {
+        return candidates[_candidateId].voteCount;
+    }
+
+    function vote (uint _candidateId /* solidity also pass meta data including caller here */) public {
+        address sender = msg.sender;
+        // pre-condition
+        // 1. voter never votes before
+        require(!voters[sender]);
+
+        // 2. voter votes for valid candidate
+        require(_candidateId > 0 && _candidateId <= candidatesCount);
+        // record that voter has voted
+        voters[sender] = true;
+
+        // update candidate vote Count
+        candidates[_candidateId].voteCount ++;
     }
 }
