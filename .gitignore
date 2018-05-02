@@ -63,6 +63,7 @@ typings/
 
 
 ### Solidity ###
+build/
 # Logs
 
 # Runtime data
